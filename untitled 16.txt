@@ -1,0 +1,82 @@
+package demounittest;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+@DisplayName("Kiểm thử dịch vụ đăng nhập - LoginService")
+public class LoginServiceTest {
+
+    @BeforeEach
+    void setUp() {
+        // Chạy trước mỗi test case (nếu cần khởi tạo tài nguyên)
+    }
+
+    @AfterEach
+    void tearDown() {
+        // Chạy sau mỗi test case (nếu cần dọn dẹp tài nguyên)
+    }
+
+    @Test
+    @DisplayName("1. Đăng nhập thành công với thông tin chính xác")
+    void testLogin_success() {
+        assertTrue(LoginService.login("user", "password"), 
+                "Đăng nhập thành công nên trả về true");
+    }
+
+    @Test
+    @DisplayName("2. Thất bại khi sai tên người dùng")
+    void testLogin_invalidUsername() {
+        assertFalse(LoginService.login("invalidUser", "password"), 
+                "Sai tên người dùng phải trả về false");
+    }
+
+    @Test
+    @DisplayName("3. Thất bại khi sai mật khẩu")
+    void testLogin_incorrectPassword() {
+        assertFalse(LoginService.login("user", "wrongPassword"), 
+                "Sai mật khẩu phải trả về false");
+    }
+
+    @Test
+    @DisplayName("4. Thất bại khi sai cả tên người dùng và mật khẩu")
+    void testLogin_invalidUsernameAndPassword() {
+        assertFalse(LoginService.login("guest", "123456"), 
+                "Sai cả tài khoản và mật khẩu phải trả về false");
+    }
+
+    @Test
+    @DisplayName("5. Thất bại khi cả tài khoản và mật khẩu đều rỗng")
+    void testLogin_emptyUsernameAndPassword() {
+        assertFalse(LoginService.login("", ""), 
+                "Tài khoản và mật khẩu rỗng phải trả về false");
+    }
+
+    @Test
+    @DisplayName("6. Thất bại khi tên người dùng rỗng nhưng mật khẩu đúng")
+    void testLogin_emptyUsernameCorrectPassword() {
+        assertFalse(LoginService.login("", "password"), 
+                "Tên người dùng rỗng phải trả về false");
+    }
+
+    @Test
+    @DisplayName("7. Thất bại khi tên người dùng đúng nhưng mật khẩu rỗng")
+    void testLogin_correctUsernameEmptyPassword() {
+        assertFalse(LoginService.login("user", ""), 
+                "Mật khẩu rỗng phải trả về false");
+    }
+
+    @Test
+    @DisplayName("8. Thất bại khi thông tin chứa khoảng trắng dư thừa")
+    void testLogin_usernameAndPasswordWithSpaces() {
+        // Vì code nguồn dùng .equals() trực tiếp mà không .trim(), 
+        // các chuỗi có khoảng trắng chắc chắn sẽ trả về false.
+        assertFalse(LoginService.login(" user ", "password"), 
+                "Tên người dùng chứa khoảng trắng đầu cuối phải trả về false");
+        assertFalse(LoginService.login("user", "pass word"), 
+                "Mật khẩu chứa khoảng trắng ở giữa phải trả về false");
+    }
+}
